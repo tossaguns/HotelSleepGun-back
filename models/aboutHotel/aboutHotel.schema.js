@@ -45,6 +45,9 @@ const aboutHotelSchema = new Schema(
   checkInEarlyPricePerHour: { type: Number },
   checkOutEarlyPricePerHour: { type: Number },
 
+  //FIXME: เพิ่มมาเดี๋ยวกลับมาเเก้ไข
+    // serviceCharge: { type: Number },
+    // vat: { type: Number },
     
     typeBedPrice: {
       type: typeBedPriceSchema,

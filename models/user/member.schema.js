@@ -31,6 +31,13 @@ const memberSchema = new Schema(
     province: { type: String, default: "" },
     postcode: { type: String, match: /^[0-9]{5}$/, default: "" },
 
+
+    //FIXME:
+    // idenNumber: { type: String, match: /^[0-9]{13}$/ },
+    // idenImg: { type: String, default: "" },
+    // passportNumber: { type: String, match: /^[A-Z0-9]{6,9}$/ },
+    // passportImg: { type: String, default: "" },
+
   },
   {
     timestamps: true,

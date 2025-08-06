@@ -31,6 +31,19 @@ const roomSchema = new Schema(
       type: Number,
       default: 0,
     },
+    
+    // FIXME: เพิ่มมาเดี๋ยวกลับมาเเก้ไข
+    // basePrice: {
+    //   type: Number,
+    //   default: 0,
+    // },
+
+    // serviceChargeAmount: { type: Number, default: 0 },
+    // vatAmount: { type: Number, default: 0 },
+    // basePrice: { type: Number, default: 0 },
+    // isServiceChargeIncluded: { type: Boolean, default: false },
+    // isVatIncluded: { type: Boolean, default: false },
+
     stayPeople: {
       type: Number,
       default: 0,
