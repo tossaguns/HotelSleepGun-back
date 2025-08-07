@@ -33,10 +33,10 @@ const memberSchema = new Schema(
 
 
     //FIXME:
-    // idenNumber: { type: String, match: /^[0-9]{13}$/ },
-    // idenImg: { type: String, default: "" },
-    // passportNumber: { type: String, match: /^[A-Z0-9]{6,9}$/ },
-    // passportImg: { type: String, default: "" },
+    idenNumber: { type: String, match: /^[0-9]{13}$/, default: "" },
+    idenImg: { type: String, default: "" },
+    passportNumber: { type: String, default: "" },
+    passportImg: { type: String, default: "" },
 
   },
   {

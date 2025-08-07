@@ -871,9 +871,65 @@ const createRoom = (req, res) => {
         console.log('✅ Created new POS for partner:', req.partner.id);
       }
 
+      // คำนวณ service charge และ VAT
+      let totalPrice = parseFloat(req.body.price) || 0;
+      let basePrice = totalPrice;
+      let serviceChargeAmount = 0;
+      let vatAmount = 0;
+      let isServiceChargeIncluded = req.body.isServiceCharge === 'true';
+      let isVatIncluded = req.body.isVat === 'true';
+
+      console.log('🔍 Service Charge and VAT calculation:', {
+        totalPrice,
+        isServiceChargeIncluded,
+        isVatIncluded
+      });
+
+      // ดึงข้อมูล aboutHotel เพื่อหาค่า service charge และ VAT
+      const aboutHotelData = await aboutHotel.findOne({ partnerId: req.partner.id });
+      
+      if (aboutHotelData && (isServiceChargeIncluded || isVatIncluded)) {
+        const serviceChargePercent = aboutHotelData.serviceCharge || 0;
+        const vatPercent = aboutHotelData.vat || 0;
+        
+        console.log('📊 AboutHotel data:', {
+          serviceChargePercent,
+          vatPercent
+        });
+        
+        // คำนวณราคา base โดยการหัก service charge และ VAT ออกจากราคารวม
+        const totalPercentage = (isServiceChargeIncluded ? serviceChargePercent : 0) + (isVatIncluded ? vatPercent : 0);
+        if (totalPercentage > 0) {
+          basePrice = Math.round(totalPrice / (1 + totalPercentage / 100));
+        }
+        
+        // คำนวณ service charge และ VAT amount จากราคา base
+        if (isServiceChargeIncluded && serviceChargePercent > 0) {
+          serviceChargeAmount = Math.round(basePrice * serviceChargePercent / 100);
+        }
+        
+        if (isVatIncluded && vatPercent > 0) {
+          vatAmount = Math.round(basePrice * vatPercent / 100);
+        }
+        
+        console.log('💰 Calculation results:', {
+          totalPrice,
+          basePrice,
+          serviceChargeAmount,
+          vatAmount,
+          totalPercentage,
+          calculatedTotal: basePrice + serviceChargeAmount + vatAmount
+        });
+      }
+
       const roomData = {
         roomNumber: req.body.roomNumber,
         price: req.body.price,
+        basePrice: basePrice,
+        serviceChargeAmount: serviceChargeAmount,
+        vatAmount: vatAmount,
+        isServiceChargeIncluded: isServiceChargeIncluded,
+        isVatIncluded: isVatIncluded,
         stayPeople: req.body.stayPeople,
         roomDetail: req.body.roomDetail,
         air: req.body.air,
@@ -1104,8 +1160,64 @@ const updateRoom = (req, res) => {
         });
       }
 
+      // คำนวณ service charge และ VAT
+      let totalPrice = parseFloat(req.body.price) || roomData.price || 0;
+      let basePrice = totalPrice;
+      let serviceChargeAmount = 0;
+      let vatAmount = 0;
+      let isServiceChargeIncluded = req.body.isServiceCharge === 'true';
+      let isVatIncluded = req.body.isVat === 'true';
+
+      console.log('🔍 Service Charge and VAT calculation (update):', {
+        totalPrice,
+        isServiceChargeIncluded,
+        isVatIncluded
+      });
+
+      // ดึงข้อมูล aboutHotel เพื่อหาค่า service charge และ VAT
+      const aboutHotelData = await aboutHotel.findOne({ partnerId: req.partner.id });
+      
+      if (aboutHotelData && (isServiceChargeIncluded || isVatIncluded)) {
+        const serviceChargePercent = aboutHotelData.serviceCharge || 0;
+        const vatPercent = aboutHotelData.vat || 0;
+        
+        console.log('📊 AboutHotel data (update):', {
+          serviceChargePercent,
+          vatPercent
+        });
+        
+        // คำนวณราคา base โดยการหัก service charge และ VAT ออกจากราคารวม
+        const totalPercentage = (isServiceChargeIncluded ? serviceChargePercent : 0) + (isVatIncluded ? vatPercent : 0);
+        if (totalPercentage > 0) {
+          basePrice = Math.round(totalPrice / (1 + totalPercentage / 100));
+        }
+        
+        // คำนวณ service charge และ VAT amount จากราคา base
+        if (isServiceChargeIncluded && serviceChargePercent > 0) {
+          serviceChargeAmount = Math.round(basePrice * serviceChargePercent / 100);
+        }
+        
+        if (isVatIncluded && vatPercent > 0) {
+          vatAmount = Math.round(basePrice * vatPercent / 100);
+        }
+        
+        console.log('💰 Calculation results (update):', {
+          totalPrice,
+          basePrice,
+          serviceChargeAmount,
+          vatAmount,
+          totalPercentage,
+          calculatedTotal: basePrice + serviceChargeAmount + vatAmount
+        });
+      }
+
       roomData.roomNumber = req.body.roomNumber ?? roomData.roomNumber;
       roomData.price = req.body.price ?? roomData.price;
+      roomData.basePrice = basePrice;
+      roomData.serviceChargeAmount = serviceChargeAmount;
+      roomData.vatAmount = vatAmount;
+      roomData.isServiceChargeIncluded = isServiceChargeIncluded;
+      roomData.isVatIncluded = isVatIncluded;
       roomData.stayPeople = req.body.stayPeople ?? roomData.stayPeople;
       roomData.roomDetail = req.body.roomDetail ?? roomData.roomDetail;
       roomData.air = req.body.air ?? roomData.air;

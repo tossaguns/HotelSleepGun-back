@@ -32,17 +32,17 @@ const roomSchema = new Schema(
       default: 0,
     },
     
-    // FIXME: เพิ่มมาเดี๋ยวกลับมาเเก้ไข
-    // basePrice: {
-    //   type: Number,
-    //   default: 0,
-    // },
+    //FIXME: เพิ่ม basePrice serviceChargeAmount vatAmount basePrice isServiceChargeIncluded isVatIncluded โดยดึงข้อมูลมาจาก aboutHotel
+    basePrice: {
+      type: Number,
+      default: 0,
+    },
 
-    // serviceChargeAmount: { type: Number, default: 0 },
-    // vatAmount: { type: Number, default: 0 },
-    // basePrice: { type: Number, default: 0 },
-    // isServiceChargeIncluded: { type: Boolean, default: false },
-    // isVatIncluded: { type: Boolean, default: false },
+    serviceChargeAmount: { type: Number, default: 0 },
+    vatAmount: { type: Number, default: 0 },
+    basePrice: { type: Number, default: 0 },
+    isServiceChargeIncluded: { type: Boolean, default: false },
+    isVatIncluded: { type: Boolean, default: false },
 
     stayPeople: {
       type: Number,
