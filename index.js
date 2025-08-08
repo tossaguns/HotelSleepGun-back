@@ -47,8 +47,15 @@ app.use(
   require("./routes/approvePartnerRoutes")
 );
 
-// ใช้ POS routes ที่รวมทุกฟังก์ชันไว้ด้วยกัน
+
 app.use(prefix + "/pos", require("./routes/POS/pos.routes"));
+app.use(prefix + "/buildings", require("./routes/POS/building.routes"));
+app.use(prefix + "/rooms", require("./routes/POS/room.routes"));
+app.use(prefix + "/tags", require("./routes/POS/tag.routes"));
+app.use(prefix + "/aboutHotel", require("./routes/POS/aboutHotel.routes"));
+app.use(prefix + "/comprehensiveData", require("./routes/POS/comprehensiveData.routes"));
+
+
 app.use(prefix + "/checkInOrder", require("./routes/POS/checkInOrder.routes"));
 app.use(prefix + "/partner", require("./routes/user/partnerRoutes"));
 app.use(prefix + "/partnerLogin", require("./routes/login/partnerLoginRoutes"));
